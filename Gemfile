@@ -12,7 +12,8 @@ gem 'rails', '~> 7.1.3', '>= 7.1.3.4'
 gem 'bootsnap', require: false
 gem 'tzinfo-data', platforms: %i[windows jruby]
 # gem "image_processing", "~> 1.2"
-# gem "rack-cors"
+gem 'jwt'
+gem 'rack-cors'
 
 group :development, :test do
   gem 'bcrypt'
