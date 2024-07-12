@@ -21,6 +21,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_11_131229) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
+
+  create_table "product_lines", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.uuid "order_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_product_lines_on_order_id"
+    t.index ["product_id"], name: "index_product_lines_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.integer "stock"
@@ -38,4 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_11_131229) do
     t.index "lower((email)::text)", name: "index_users_on_LOWER_email", unique: true
   end
 
+  add_foreign_key "orders", "users"
+  add_foreign_key "product_lines", "orders"
+  add_foreign_key "product_lines", "products"
 end
