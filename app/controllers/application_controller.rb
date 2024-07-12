@@ -1,39 +1,12 @@
 class ApplicationController < ActionController::API
   before_action :user_authorized
 
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
+  include ExceptionHandler
 
-  SECRET_KEY = Rails.application.credentials.to_s
-
-  def not_found
-    render json: {
-      errors: [
-        {
-          status: '404',
-          title: 'Not Found',
-          message: 'Not Found'
-        }
-      ]
-    }, status: :not_found
-  end
-
-  def record_invalid(message)
-    default_message = {
-      status: '400',
-      title: '',
-      message: 'Sorry something went wrong'
-    }
-
-    render json: {
-      errors: [
-        message.nil? ? default_message : message
-      ]
-    }, status: :bad_request
-  end
+  SECRET_KEY = Rails.application.credentials.secret_key_base
 
   def encode_token(payload)
-    JWT.encode(payload, SECRET_KEY)
+    JWT.encode(payload, SECRET_KEY, 'HS512')
   end
 
   def decode_user_token
@@ -41,8 +14,9 @@ class ApplicationController < ActionController::API
     return unless header
 
     @token = header.split[1]
+
     begin
-      JWT.decode(@token, SECRET_KEY, true, algorithm: 'HS256')
+      JWT.decode(@token, SECRET_KEY, true, { algorithm: 'HS512' })
     rescue JWT::DecodeError
       nil
     end
