@@ -11,7 +11,7 @@ module Api
           render json: {
             user:,
             token: @token
-          }, status: :accepted
+          }, status: :ok
         else
           render json: { message: 'Incorrect password' }, status: :unauthorized
         end
