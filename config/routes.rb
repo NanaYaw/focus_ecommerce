@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       post 'login', to: 'sessions#login'
       post 'logout', to: 'sessions#destroy'
+      resources :products, only: %i[index show]
+      resources :users, only: %i[index show]
     end
   end
 
