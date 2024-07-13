@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post 'logout', to: 'sessions#destroy'
       resources :products, only: %i[index show]
       resources :users, only: %i[index show]
+      resources :orders, only: %i[create]
     end
   end
 
