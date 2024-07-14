@@ -56,6 +56,45 @@ module Api
         end
       end
 
+      describe 'Post #create' do
+        let(:valid_attributes) do
+          { name: 'new name', email: 'new@example.com', password: 'password' }
+        end
+        let(:invalid_attributes) { { name: '', email: 'invalid' } }
+
+        context 'with valid parameters' do
+          before do
+            post('/api/v1/users/', params: { user: valid_attributes })
+
+            @user = JSON.parse(response.body)['data']
+          end
+
+          it 'updates the user' do
+            expect(@user['name']).to eq('new name')
+            expect(@user['email']).to eq('new@example.com')
+          end
+
+          it 'returns a success response' do
+            expect(response).to have_http_status(:ok)
+          end
+        end
+
+        context 'with invalid parameters' do
+          before do
+            post('/api/v1/users', params: { user: invalid_attributes })
+            @user = JSON.parse(response.body)
+          end
+
+          it 'returns an unprocessable entity response' do
+            expect(response).to have_http_status(:unprocessable_entity)
+          end
+
+          it 'returns error messages' do
+            expect(@user['errors']).to be_present
+          end
+        end
+      end
+
       describe 'PUT #update' do
         let(:valid_attributes) do
           { name: 'New Name', email: 'new@example.com', password: 'password' }
