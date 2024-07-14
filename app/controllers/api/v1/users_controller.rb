@@ -22,6 +22,13 @@ module Api
       end
 
       def update
+        if @user.update(user_params)
+          render json: { data: @user,
+                         status: { code: 200, message: 'User updated successfully' } },
+                 status: :ok
+        else
+          error_updating
+        end
       end
 
       def destroy
@@ -35,6 +42,11 @@ module Api
 
       def user_params
         params.require(:user).permit(:name, :email)
+      end
+
+      def error_updating
+        render json: { errors: 'unprocessable_entity', status: :unprocessable_entity },
+               status: :unprocessable_entity
       end
     end
   end
