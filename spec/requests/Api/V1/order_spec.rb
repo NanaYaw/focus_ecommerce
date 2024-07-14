@@ -35,6 +35,24 @@ module Api
         end
       end
 
+      describe 'GET #show' do
+        context 'when the order exists' do
+          before { get "/api/v1/orders/#{order.id}", headers: }
+
+          it 'returns a success response' do
+            expect(response).to have_http_status(:ok)
+          end
+        end
+
+        context 'when the order does not exist' do
+          before { get '/api/v1/order/0', headers: }
+
+          it 'returns a not found response' do
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+      end
+
       describe 'POST #create' do
         let(:valid_attributes) do
           {

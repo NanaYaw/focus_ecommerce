@@ -11,6 +11,12 @@ module Api
         }, status: :ok
       end
 
+      def show
+        render json: {
+          data: @set_order
+        }, status: :ok
+      end
+
       def create
         ActiveRecord::Base.transaction do
           order = current_user.orders.build(order_params.except(:product_lines))
