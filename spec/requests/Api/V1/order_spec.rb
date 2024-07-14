@@ -20,6 +20,21 @@ module Api
         expect(@token).not_to be_nil
       end
 
+      describe 'GET index' do
+        before do
+          create_list(:order, 5)
+          get '/api/v1/orders', headers:
+        end
+
+        it 'returns a success response' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'returns all orders' do
+          expect(json['data'].size).to eq(6)
+        end
+      end
+
       describe 'POST #create' do
         let(:valid_attributes) do
           {

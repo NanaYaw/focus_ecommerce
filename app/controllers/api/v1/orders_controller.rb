@@ -1,6 +1,16 @@
 module Api
   module V1
     class OrdersController < ApplicationController
+      before_action :set_order, only: %i[update show destroy]
+
+      def index
+        @orders = Order.all
+
+        render json: {
+          data: @orders
+        }, status: :ok
+      end
+
       def create
         ActiveRecord::Base.transaction do
           order = current_user.orders.build(order_params.except(:product_lines))
@@ -29,6 +39,15 @@ module Api
 
       def order_params
         params.require(:orders).permit(:user_id, product_lines: %i[quantity product_id])
+      end
+
+      def set_order
+        @set_order ||= Order.find(params['id'])
+      end
+
+      def error_updating(order)
+        render json: { errors: order.errors },
+               status: :unprocessable_entity
       end
     end
   end
