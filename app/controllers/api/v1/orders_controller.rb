@@ -20,6 +20,11 @@ module Api
         end
       end
 
+      def user_orders
+        @user_orders = current_user.orders
+        render json: { data: @user_orders }, status: :ok
+      end
+
       private
 
       def order_params
