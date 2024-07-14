@@ -97,7 +97,7 @@ module Api
 
       describe 'PUT #update' do
         let(:valid_attributes) do
-          { name: 'New Name', email: 'new@example.com', password: 'password' }
+          { name: 'new name', email: 'new@example.com', password: 'password' }
         end
         let(:invalid_attributes) { { name: '', email: 'invalid' } }
 
@@ -109,7 +109,7 @@ module Api
           end
 
           it 'updates the user' do
-            expect(@user['name']).to eq('New Name')
+            expect(@user['name']).to eq('new name')
             expect(@user['email']).to eq('new@example.com')
           end
 
