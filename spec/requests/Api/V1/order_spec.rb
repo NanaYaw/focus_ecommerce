@@ -7,7 +7,7 @@ module Api
       let!(:logged_user) { :user }
       let!(:token) { generate_token(user) }
       let!(:product) { create(:product) }
-      let!(:order) { create(:order, user_id: user.id) }
+      let(:order) { create(:order, user:) }
 
       before do
         login(user.email, user.password)
@@ -31,7 +31,7 @@ module Api
         end
 
         it 'returns all orders' do
-          expect(json['data'].size).to eq(6)
+          expect(json['data'].size).to eq(5)
         end
       end
 
@@ -68,13 +68,13 @@ module Api
           }
         end
 
-        context 'with valid parameters' do
-          it 'creates a new Order' do
-            expect do
-              post '/api/v1/orders', params: valid_attributes, headers:
-            end.to change(Order, :count).by(1)
-          end
+        before do
+          create(:product_line, product_id: product.id, order_id: order.id)
 
+          @product_line_response = response
+        end
+
+        context 'with valid parameters' do
           it 'creates a new Order' do
             expect do
               post '/api/v1/orders', params: valid_attributes, headers:
@@ -85,6 +85,60 @@ module Api
             expect do
               post '/api/v1/orders', params: valid_attributes, headers:
             end.to change(ProductLine, :count).by(1)
+          end
+
+          it 'returns a created status' do
+            expect(response).to have_http_status(:ok)
+          end
+        end
+      end
+
+      describe 'POST #update' do
+        before do
+          patch("/api/v1/orders/#{order.id}", params: {
+                  orders: {
+                    user_id: user.id.to_s,
+                    product_lines: [
+                      {
+                        quantity: 2,
+                        product_id: product.id
+                      }
+                    ]
+                  }
+                }, headers:)
+
+          @product_response = response
+          @product_lines = response.parsed_body['data']
+        end
+
+        let!(:product_line) { create(:product_line) }
+
+        let(:valid_attributes) do
+          {
+            orders: {
+              user_id: user.id.to_s,
+              product_lines: [
+                {
+                  quantity: 2,
+                  product_id: product.id,
+                  id: product_line.id
+                }
+              ]
+            }
+          }
+        end
+
+        context 'with valid parameters' do
+          it 'returns an ok status' do
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'updates the product line quantity' do
+            expect(@product_lines['product_lines'].first['quantity']).to eq(2)
+          end
+
+          it 'returns the updated order' do
+            expect(@product_lines['id']).to eq(order.id)
           end
 
           it 'returns a created status' do

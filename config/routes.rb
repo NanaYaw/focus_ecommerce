@@ -15,6 +15,9 @@ Rails.application.routes.draw do
         collection do
           get :user_orders
         end
+        member do
+          get :order_products
+        end
       end
     end
   end
