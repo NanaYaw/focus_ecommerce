@@ -77,6 +77,11 @@ module Api
       end
 
       def destroy
+        order = Order.find(params[:id])
+        order.destroy
+        head :no_content
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: 'Order not found' }, status: :not_found
       end
 
       private

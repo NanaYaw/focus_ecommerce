@@ -7,7 +7,7 @@ module Api
       let!(:logged_user) { :user }
       let!(:token) { generate_token(user) }
       let!(:product) { create(:product) }
-      let(:order) { create(:order, user:) }
+      let!(:order) { create(:order, user:) }
 
       before do
         login(user.email, user.password)
@@ -31,7 +31,7 @@ module Api
         end
 
         it 'returns all orders' do
-          expect(json['data'].size).to eq(5)
+          expect(json['data'].size).to eq(6)
         end
       end
 
@@ -163,6 +163,32 @@ module Api
 
         it 'has equal number of array of p' do
           expect(@parsed_response.size).to eq(1)
+        end
+      end
+
+      describe 'DELETE #destroy' do
+        context 'when the order exists' do
+          before do
+            create(:order, user:)
+          end
+
+          it 'deletes the order and returns no content status' do
+            initial_count = Order.count
+
+            delete("/api/v1/orders/#{order.id}", headers:)
+
+            expect(Order.count).to eq(initial_count - 1)
+
+            expect(response).to have_http_status(:no_content)
+          end
+        end
+
+        context 'when the order does not exist' do
+          it 'returns a not found status' do
+            delete('/api/v1/orders/0', headers:)
+            expect(response).to have_http_status(:not_found)
+            expect(response.parsed_body.dig(:errors, 0, :message)).to eq('Not Found')
+          end
         end
       end
     end

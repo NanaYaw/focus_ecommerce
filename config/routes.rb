@@ -10,8 +10,8 @@ Rails.application.routes.draw do
       post 'login', to: 'sessions#login'
       post 'logout', to: 'sessions#destroy'
       resources :products, only: %i[index show]
-      resources :users, only: %i[index show update create]
-      resources :orders, only: %i[index show update create] do
+      resources :users, only: %i[index show update create destroy]
+      resources :orders, only: %i[index show update create destroy] do
         collection do
           get :user_orders
         end
