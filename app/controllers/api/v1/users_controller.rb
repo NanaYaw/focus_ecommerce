@@ -43,6 +43,11 @@ module Api
       end
 
       def destroy
+        user = User.find(params[:id])
+        user.destroy
+        head :no_content
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: 'User not found' }, status: :not_found
       end
 
       private

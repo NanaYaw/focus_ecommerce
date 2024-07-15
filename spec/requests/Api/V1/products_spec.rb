@@ -60,6 +60,28 @@ module Api
           end
         end
       end
+
+      describe 'DELETE #destroy' do
+        context 'when the product exists' do
+          it 'deletes the product and returns no content status' do
+            initial_count = Product.count
+
+            delete("/api/v1/products/#{product_id}", headers:)
+
+            expect(Product.count).to eq(initial_count - 1)
+
+            expect(response).to have_http_status(:no_content)
+          end
+        end
+
+        context 'when the product does not exist' do
+          it 'returns a not found status' do
+            delete('/api/v1/products/0', headers:)
+            expect(response).to have_http_status(:not_found)
+            expect(response.parsed_body.dig(:errors, 0, :message)).to eq('Not Found')
+          end
+        end
+      end
     end
   end
 end

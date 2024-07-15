@@ -133,6 +133,28 @@ module Api
           end
         end
       end
+
+      describe 'DELETE #destroy' do
+        context 'when the user exists' do
+          it 'deletes the user and returns no content status' do
+            initial_count = User.count
+
+            delete("/api/v1/users/#{user.id}", headers:)
+
+            expect(User.count).to eq(initial_count - 1)
+
+            expect(response).to have_http_status(:no_content)
+          end
+        end
+
+        context 'when the user does not exist' do
+          it 'returns a not found status' do
+            delete('/api/v1/users/0', headers:)
+            expect(response).to have_http_status(:not_found)
+            expect(response.parsed_body.dig(:errors, 0, :message)).to eq('Not Found')
+          end
+        end
+      end
     end
   end
 end
