@@ -32,6 +32,50 @@ module Api
         end
       end
 
+      describe 'Post #create' do
+        let(:valid_attributes) do
+          { name: Faker::Commerce.product_name, stock: Faker::Number.between(from: 2, to: 5),
+            price: 4.3 }
+        end
+        let(:invalid_attributes) do
+          { name: '', stock: 3.1,
+            price: -500 }
+        end
+
+        context 'with valid parameters' do
+          before do
+            post('/api/v1/products/', params: { product: valid_attributes })
+
+            @product = JSON.parse(response.body)['data']
+          end
+
+          it 'updates the product' do
+            expect(@product['name']).to eq(valid_attributes[:name])
+            expect(@product['price']).to eq(valid_attributes[:price])
+            expect(@product['stock']).to eq(valid_attributes[:stock])
+          end
+
+          it 'returns a success response' do
+            expect(response).to have_http_status(:ok)
+          end
+        end
+
+        context 'with invalid parameters' do
+          before do
+            post('/api/v1/products', params: { product: invalid_attributes })
+            @product = JSON.parse(response.body)
+          end
+
+          it 'returns an unprocessable entity response' do
+            expect(response).to have_http_status(:unprocessable_entity)
+          end
+
+          it 'returns error messages' do
+            expect(@product['errors']).to be_present
+          end
+        end
+      end
+
       describe 'GET show' do
         before do
           get "/api/v1/products/#{product_id}",

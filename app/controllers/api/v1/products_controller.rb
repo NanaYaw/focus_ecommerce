@@ -18,6 +18,18 @@ module Api
         }, status: :ok
       end
 
+      def create
+        @product = Product.new(product_params)
+        if @product.save
+          render json: { data: @product,
+                         status: { code: 200,
+                                   message: "Product #{@product.name}  created successfully" } },
+                 status: :ok
+        else
+          render json: { errors: @product.errors }, status: :unprocessable_entity
+        end
+      end
+
       def destroy
         @product.destroy
         head :no_content
