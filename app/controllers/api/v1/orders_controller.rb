@@ -13,7 +13,7 @@ module Api
 
       def show
         render json: {
-          data: @set_order
+          data: OrderSerializer.new(@set_order)
         }, status: :ok
       end
 
