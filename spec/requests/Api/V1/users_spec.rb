@@ -64,7 +64,7 @@ module Api
 
         context 'with valid parameters' do
           before do
-            post('/api/v1/users/', params: { user: valid_attributes })
+            post('/api/v1/users/', params: { user: valid_attributes }, headers:)
 
             @user = json['data']
           end
@@ -81,7 +81,7 @@ module Api
 
         context 'with invalid parameters' do
           before do
-            post('/api/v1/users', params: { user: invalid_attributes })
+            post('/api/v1/users', params: { user: invalid_attributes }, headers:)
             @user = json
           end
 
