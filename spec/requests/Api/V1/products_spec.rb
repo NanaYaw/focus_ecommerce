@@ -33,18 +33,15 @@ module Api
       end
 
       describe 'Post #create' do
-        let(:valid_attributes) do
-          { name: Faker::Commerce.product_name, stock: Faker::Number.between(from: 2, to: 5),
-            price: 4.3 }
-        end
-        let(:invalid_attributes) do
-          { name: '', stock: 3.1,
-            price: -500 }
-        end
+        valid_attributes = { name: Faker::Commerce.product_name,
+                             stock: Faker::Number.between(from: 2, to: 5),
+                             price: 4 }
+
+        invalid_attributes = { name: '', stock: 3.1, price: -500 }
 
         context 'with valid parameters' do
           before do
-            post('/api/v1/products/', params: { product: valid_attributes })
+            post('/api/v1/products/', params: { product: valid_attributes }, headers:)
 
             @product = JSON.parse(response.body)['data']
           end
@@ -62,8 +59,7 @@ module Api
 
         context 'with invalid parameters' do
           before do
-            post('/api/v1/products', params: { product: invalid_attributes })
-            @product = JSON.parse(response.body)
+            post('/api/v1/products', params: { product: invalid_attributes }, headers:)
           end
 
           it 'returns an unprocessable entity response' do
@@ -71,7 +67,7 @@ module Api
           end
 
           it 'returns error messages' do
-            expect(@product['errors']).to be_present
+            expect(json['errors']).to be_present
           end
         end
       end
@@ -101,6 +97,49 @@ module Api
 
           it 'returns status code 404' do
             expect(response).to have_http_status(404)
+          end
+        end
+      end
+
+      describe 'PUT #update' do
+        let(:valid_attributes) do
+          { name: Faker::Commerce.product_name, stock: Faker::Number.between(from: 2, to: 5),
+            price: 4 }
+        end
+        let(:invalid_attributes) do
+          { name: '', stock: 3.1,
+            price: -500 }
+        end
+
+        context 'with valid parameters' do
+          before do
+            patch("/api/v1/products/#{product_id}", params: { product: valid_attributes }, headers:)
+            @product = json['data']
+          end
+
+          it 'updates the product' do
+            expect(@product['name']).to eq(valid_attributes[:name])
+            expect(@product['stock']).to eq(valid_attributes[:stock])
+            expect(@product['price']).to eq(valid_attributes[:price])
+          end
+
+          it 'returns a success response' do
+            expect(response).to have_http_status(:ok)
+          end
+        end
+
+        context 'with invalid parameters' do
+          before do
+            patch("/api/v1/products/#{product_id}", params: { product: invalid_attributes },
+                                                    headers:)
+          end
+
+          it 'returns an unprocessable entity response' do
+            expect(response).to have_http_status(:unprocessable_entity)
+          end
+
+          it 'returns error messages' do
+            expect(json['errors']).to be_present
           end
         end
       end

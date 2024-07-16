@@ -66,7 +66,7 @@ module Api
           before do
             post('/api/v1/users/', params: { user: valid_attributes })
 
-            @user = JSON.parse(response.body)['data']
+            @user = json['data']
           end
 
           it 'updates the user' do
@@ -82,7 +82,7 @@ module Api
         context 'with invalid parameters' do
           before do
             post('/api/v1/users', params: { user: invalid_attributes })
-            @user = JSON.parse(response.body)
+            @user = json
           end
 
           it 'returns an unprocessable entity response' do
@@ -105,7 +105,7 @@ module Api
           before do
             patch("/api/v1/users/#{user.id}", params: { user: valid_attributes }, headers:)
 
-            @user = JSON.parse(response.body)['data']
+            @user = json['data']
           end
 
           it 'updates the user' do
@@ -121,7 +121,7 @@ module Api
         context 'with invalid parameters' do
           before do
             patch("/api/v1/users/#{user.id}", params: { user: invalid_attributes }, headers:)
-            @user = JSON.parse(response.body)
+            @user = json
           end
 
           it 'returns an unprocessable entity response' do

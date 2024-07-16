@@ -70,8 +70,6 @@ module Api
 
         before do
           create(:product_line, product_id: product.id, order_id: order.id)
-
-          @product_line_response = response
         end
 
         context 'with valid parameters' do
@@ -108,7 +106,8 @@ module Api
                 }, headers:)
 
           @product_response = response
-          @product_lines = response.parsed_body['data']
+          @product_lines = json['data']['product_lines']
+          @product_id = json['data']['id']
         end
 
         let!(:product_line) { create(:product_line) }
@@ -134,11 +133,11 @@ module Api
           end
 
           it 'updates the product line quantity' do
-            expect(@product_lines['product_lines'].first['quantity']).to eq(2)
+            expect(@product_lines.first['quantity']).to eq(2)
           end
 
           it 'returns the updated order' do
-            expect(@product_lines['id']).to eq(order.id)
+            expect(@product_id).to eq(order.id)
           end
 
           it 'returns a created status' do
@@ -150,7 +149,6 @@ module Api
       describe 'GET #user_orders' do
         before do
           get('/api/v1/orders/user_orders', headers:)
-          @parsed_response = JSON.parse(response.body)
         end
 
         it 'has success http status' do
@@ -158,11 +156,11 @@ module Api
         end
 
         it 'has empty array when user has no order' do
-          expect(@parsed_response['data']).to be_an(Array)
+          expect(json['data']).to be_an(Array)
         end
 
         it 'has equal number of array of p' do
-          expect(@parsed_response.size).to eq(1)
+          expect(json.size).to eq(1)
         end
       end
 
