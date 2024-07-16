@@ -60,8 +60,7 @@ Follow these instructions to set up and run the project on your local machine.
 ### Running Tests
 This project uses RSpec for testing. To run the tests, use the following command:
 
-	```sh
-	bundle exec rspec
+    bundle exec rspec
 
 ### Configuration
 
