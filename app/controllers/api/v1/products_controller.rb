@@ -63,6 +63,14 @@ module Api
         render json: { error: 'Product not found' }, status: :not_found
       end
 
+      def low_stock
+        low_stock_products = Product.low_stock
+        render json: {
+          status: { code: 200, message: 'Low stock products' },
+          data: low_stock_products
+        }, status: :ok
+      end
+
       private
 
       def set_product

@@ -42,7 +42,7 @@ module Api
           before do
             post('/api/v1/products/', params: { product: valid_attributes }, headers:)
 
-            @product = JSON.parse(response.body)['data']
+            @product = json['data']
           end
 
           it 'updates the product' do
@@ -162,6 +162,17 @@ module Api
             expect(response).to have_http_status(:not_found)
             expect(response.parsed_body.dig(:errors, 0, :message)).to eq('Not Found')
           end
+        end
+      end
+
+      describe 'GET low_stock' do
+        it 'returns products with low stock' do
+          expect(Product.low_stock.size).to eq(products.size)
+        end
+
+        it 'returns an of products are high on stock' do
+          products.first.update(stock: 6)
+          expect(Product.low_stock.size).to be > 0
         end
       end
     end

@@ -9,7 +9,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       post 'login', to: 'sessions#login'
       post 'logout', to: 'sessions#destroy'
-      resources :products
+      resources :products do
+        collection do
+          get 'low_stock'
+        end
+      end
       resources :users
       resources :orders do
         collection do
