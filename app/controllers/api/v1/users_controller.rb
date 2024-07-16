@@ -1,7 +1,6 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      skip_before_action :user_authorized, only: [:create]
       before_action :user, only: %i[update show destroy]
 
       def index
@@ -21,6 +20,11 @@ module Api
       end
 
       def create
+        if current_user.nil? || !current_user.role_admin?
+          return render json: { error: 'Permission denied, you must be an admin to create a user' },
+                        success: false
+        end
+
         @user = User.new(user_params)
         if @user.save
           render json: { data: @user,
@@ -57,7 +61,7 @@ module Api
       end
 
       def user_params
-        params.require(:user).permit(:name, :email, :password)
+        params.require(:user).permit(:role, :name, :email, :password)
       end
 
       def error_updating

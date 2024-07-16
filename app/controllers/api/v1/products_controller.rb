@@ -19,6 +19,11 @@ module Api
       end
 
       def create
+        if current_user.nil? || !current_user.role_admin?
+          return render json: { data: current_user, error: 'Permission denied, you must be an admin to create a product' },
+                        success: false
+        end
+
         product = Product.new(product_params)
 
         if product.save
@@ -32,6 +37,11 @@ module Api
       end
 
       def update
+        if current_user.nil? || !current_user.role_admin?
+          return render json: { data: current_user, error: 'Permission denied, you must be an admin to update a product' },
+                        success: false
+        end
+
         if @set_product.update(product_params)
           render json: { data: @set_product,
                          status: { code: 200, message: 'User updated successfully' } },
@@ -42,6 +52,11 @@ module Api
       end
 
       def destroy
+        if current_user.nil? || !current_user.role_admin?
+          return render json: { data: current_user, error: 'Permission denied, you must be an admin to destroy a product' },
+                        success: false
+        end
+
         @set_product.destroy
         head :no_content
       rescue ActiveRecord::RecordNotFound

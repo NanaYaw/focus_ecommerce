@@ -3,7 +3,7 @@ require 'rails_helper'
 module Api
   module V1
     RSpec.describe ProductsController, type: :request do
-      let!(:user) { create(:user) }
+      let!(:user) { create(:user, role: 'admin') }
       let!(:logged_user) { :user }
       let!(:token) { generate_token(user) }
       let!(:product) { create(:product) }
