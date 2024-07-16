@@ -14,7 +14,7 @@ Follow these instructions to set up and run the project on your local machine.
 
 - Ruby 3.3.3
 - Rails 7.1.3
-- PostgreSQL
+- PostgreSQL 15
 
 ### Gems Used
 
@@ -42,8 +42,8 @@ Follow these instructions to set up and run the project on your local machine.
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/NanaYaw/focus_commerce.git
+   cd focus_commerce 
 
 2. **Install Depedencies**
 	```sh
