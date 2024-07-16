@@ -1,6 +1,10 @@
 class User < ApplicationRecord
   before_save { self.email = email.downcase }
 
+  enum role: Hash[
+    UserRole::ROLES.collect { |role| [role, role] }
+  ], _prefix: true
+
   has_secure_password
   validates :name, presence: true
   validates :email, presence: true,
