@@ -50,8 +50,8 @@ module Api
 
       private
 
-      def product
-        @product ||= Product.find(params[:id])
+      def set_product
+        @set_product ||= Product.find(params[:id])
       end
 
       def product_params
