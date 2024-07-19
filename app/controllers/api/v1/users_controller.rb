@@ -8,14 +8,15 @@ module Api
 
         render json: {
           status: { code: 200, message: 'users' },
-          data: @users
+          data: [ActiveModel::Serializer::CollectionSerializer.new(@users,
+                                                                   serializer: UserSerializer)]
         }, status: :ok
       end
 
       def show
         render json: {
           status: { code: 200, message: 'users' },
-          data: @user
+          data: UserSerializer.new(@user)
         }, status: :ok
       end
 
@@ -27,7 +28,7 @@ module Api
 
         @user = User.new(user_params)
         if @user.save
-          render json: { data: @user,
+          render json: { data: UserSerializer.new(@user),
                          status: { code: 200,
                                    message: "User #{@user.name}  created successfully" } },
                  status: :ok
@@ -38,7 +39,7 @@ module Api
 
       def update
         if @user.update(user_params)
-          render json: { data: @user,
+          render json: { data: UserSerializer.new(@user),
                          status: { code: 200, message: 'User updated successfully' } },
                  status: :ok
         else
