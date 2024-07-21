@@ -2,7 +2,7 @@ require 'rails_helper'
 
 module Api
   module V1
-    RSpec.describe ProductsController, type: :request do
+    RSpec.describe UsersController, type: :request do
       let!(:user) { create(:user, role: 'admin') }
       let!(:logged_user) { :user }
       let!(:token) { generate_token(user) }
@@ -30,7 +30,7 @@ module Api
         end
 
         it 'returns all users' do
-          expect(json['data'].size).to eq(6)
+          expect(json['data'][0].size).to eq(6)
         end
       end
 
