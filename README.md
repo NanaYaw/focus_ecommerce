@@ -4,7 +4,9 @@ This is a Rails API project that provides various features such as user authenti
 
 ## Author
 
-This project is maintained by Augustine Sefa.
+This project is maintained by: Augustine Sefa.
+
+[Github Profile](https://github.com/NanaYaw)
 
 ## Getting Started
 
@@ -16,9 +18,13 @@ Follow these instructions to set up and run the project on your local machine.
 - Rails 7.1.3
 - PostgreSQL 15
 
+### Dependency Management
+- [Bundler](https://github.com/rubygems/rubygems/tree/master/bundler)
+Ruby 3.3.3 comes with Bundler preinstalled by default
+
 ### Gems Used
 
-	```sh
+	
 	gem 'active_model_serializers'
 	gem 'bcrypt'
 	gem 'bootsnap', require: false
