@@ -4,11 +4,12 @@ module Api
       before_action :set_order, only: %i[update show destroy]
 
       def index
-        @orders = Order.all
+        @orders = Order.includes(product_lines: :product).all
 
         render json: {
-          data: @orders
-        }, status: :ok
+          data: ActiveModel::Serializer::CollectionSerializer.new(@orders,
+                                                                  serializer: OrderSerializer)
+        }, include: { product_lines: { include: :product } }, status: :ok
       end
 
       def show
@@ -62,11 +63,8 @@ module Api
       end
 
       def user_orders
-        @user_orders = current_user.orders
-        render json: { data: [
-          ActiveModel::Serializer::CollectionSerializer.new(@user_orders,
-                                                            serializer: OrderSerializer)
-        ] },
+        @user_orders = current_user.orders_with_productlines_products
+        render json: { data: @user_orders },
                status: :ok
       end
 
