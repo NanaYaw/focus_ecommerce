@@ -9,7 +9,7 @@ module Api
         if user.authenticate(login_params[:password])
           @token = encode_token(user_id: user.id)
           render json: {
-            user:,
+            user: UserSerializer.new(user),
             token: @token
           }, status: :ok
         else
