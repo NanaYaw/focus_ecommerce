@@ -5,6 +5,9 @@ class Product < ApplicationRecord
   validates :stock, presence: true,
                     numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
+  has_many :product_lines
+  has_many :orders, through: :product_lines
+
   scope :low_stock, ->(threshold = 5) { where('stock < ?', threshold) }
 
   def price=(value)
