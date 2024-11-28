@@ -48,8 +48,8 @@ Ruby 3.3.3 comes with Bundler preinstalled by default
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/NanaYaw/focus_commerce.git
-   cd focus_commerce 
+   git clone https://github.com/NanaYaw/focus_ecommerce.git
+   cd focus_ecommerce
 
 2. **Install Depedencies**
 	```sh
